@@ -149,6 +149,26 @@ class Palette {
         };
         that.aboutpop();
     }
+    rect(){
+        let that = this;
+        that.canvas.onmousedown = function (e) {
+            let ox = e.offsetX, oy = e.offsetY;
+            that.canvas.onmousemove = function (e) {
+                let mx = e.offsetX, my = e.offsetY;
+                that.ctx.clearRect(0,0,that.cw,that.ch);              
+                if (that.history.length) {
+                    that.ctx.putImageData(that.history[that.history.length - 1], 0, 0);
+                }
+                that.ctx.strokeRect(ox,oy,mx-ox,my-oy);
+            }
+            that.canvas.onmouseup = function (e) {
+                that.history.push(that.ctx.getImageData(0, 0, that.cw, that.ch));
+                that.canvas.onmousemove = null;
+                that.canvas.onmouseup = null;
+            }
+            that.aboutpop();
+        };
+    };
     aboutpop(){
         let that = this;
         document.onkeydown = function (e) {
